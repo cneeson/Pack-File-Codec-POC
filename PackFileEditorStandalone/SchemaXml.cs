@@ -123,7 +123,7 @@ namespace PackFileEditorStandalone
         }
         
         public void Export() {
-            List<TypeInfo> sorted = new TypeInfoList(DBTypeMap.Instance.AllInfos);
+            List<TypeInfo> sorted = new TypeInfoList(DBTypeMap.AllInfos);
             sorted.Sort();
             Export(sorted);
         }

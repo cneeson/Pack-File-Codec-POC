@@ -16,35 +16,51 @@ namespace PackFileEditorStandalone
      * they are encoded as, therefore often several type infos may be applicable for a given file
      * without reading the whole table.
      */
-    public class DBTypeMap : IEnumerable<TypeInfo> {
+    public static class DBTypeMap {
         public static readonly string MASTER_SCHEMA_FILE_NAME = "master_schema.xml";
         public static readonly string SCHEMA_USER_FILE_NAME = "schema_user.xml";
         public static readonly string MODEL_SCHEMA_FILE_NAME = "schema_models.xml";
-  
-        List<TypeInfo> typeInfos = new List<TypeInfo>();
-        public List<TypeInfo> AllInfos {
-            get {
-                return typeInfos;
+
+        static List<TypeInfo> typeInfos = new List<TypeInfo>();
+
+        public static void InitializeAllTypeInfos(string basePath) {
+
+            foreach (string file in SCHEMA_FILENAMES)
+            {
+                string xmlFile = Path.Combine(basePath, file);
+                if (File.Exists(xmlFile))
+                {
+                    XmlImporter importer = null;
+                    using (Stream stream = File.OpenRead(xmlFile))
+                    {
+                        importer = new XmlImporter(stream);
+                        importer.Import(true);
+                    }
+                    typeInfos = importer.Imported;
+                    if (File.Exists(MODEL_SCHEMA_FILE_NAME))
+                    {
+                        importer = null;
+                        using (Stream stream = File.OpenRead(MODEL_SCHEMA_FILE_NAME))
+                        {
+                            importer = new XmlImporter(stream);
+                            importer.Import();
+                        }
+                    }
+                    break;
+                }
             }
         }
 
-        /*
-         * Singleton access.
-         */
-        static readonly DBTypeMap instance = new DBTypeMap();        
-        public static DBTypeMap Instance {
+        public static List<TypeInfo> AllInfos {
             get {
-                return instance;
+                return typeInfos;
             }
-        }
-        private DBTypeMap() {
-            // prevent instantiation
         }
         
         /*
          * Query if any schema has been loaded.
          */
-        public bool Initialized {
+        public static bool Initialized {
             get {
                 return typeInfos.Count != 0;
             }
@@ -64,7 +80,7 @@ namespace PackFileEditorStandalone
          * Retrieve all infos currently loaded for the given table,
          * either in the table/version format or from the GUID list.
          */
-        public List<TypeInfo> GetAllInfos(string table) {
+        public static List<TypeInfo> GetAllInfos(string table) {
             List<TypeInfo> result = new List<TypeInfo>();
             typeInfos.ForEach(t => { if (t.Name.Equals(table)) { 
                     result.Add (t);
@@ -76,7 +92,7 @@ namespace PackFileEditorStandalone
          * There may be more than one because sometimes, there are several GUIDs with
          * the same type/version but different structures.
          */
-        public List<TypeInfo> GetVersionedInfos(string key, int version) {
+        public static List<TypeInfo> GetVersionedInfos(string key, int version) {
             List<TypeInfo> result = new List<TypeInfo>(GetAllInfos(key));
             result.Sort(new BestVersionComparer { TargetVersion = version });
 #if DEBUG
@@ -89,37 +105,38 @@ namespace PackFileEditorStandalone
         /*
          * Read schema from given directory, in the order of the SCHEMA_FILENAMES.
          */
-        public void InitializeTypeMap(string basePath) {
-            foreach(string file in SCHEMA_FILENAMES) {
-                string xmlFile = Path.Combine(basePath, file);
-                if (File.Exists(xmlFile)) {
-                    initializeFromFile(xmlFile);
-                    break;
-                }
-            }
-        }
+        //public static void InitializeTypeMap(string basePath) {
+        //    foreach(string file in SCHEMA_FILENAMES) {
+        //        string xmlFile = Path.Combine(basePath, file);
+        //        if (File.Exists(xmlFile)) {
+        //            initializeFromFile(xmlFile);
+        //            break;
+        //        }
+        //    }
+        //}
         /*
          * Load the given schema xml file.
          */
-        public void initializeFromFile(string filename) {
-            XmlImporter importer = null;
-            using (Stream stream = File.OpenRead(filename)) {
-                importer = new XmlImporter(stream);
-                importer.Import(true);
-            }
-            typeInfos = importer.Imported;
-            if (File.Exists(MODEL_SCHEMA_FILE_NAME)) {
-                importer = null;
-                using (Stream stream = File.OpenRead(MODEL_SCHEMA_FILE_NAME)) {
-                    importer = new XmlImporter(stream);
-                    importer.Import();
-                }
-            }
-        }
+        //public void initializeFromFile(string filename) {
+        //    XmlImporter importer = null;
+        //    using (Stream stream = File.OpenRead(filename)) {
+        //        importer = new XmlImporter(stream);
+        //        importer.Import(true);
+        //    }
+        //    typeInfos = importer.Imported;
+        //    if (File.Exists(MODEL_SCHEMA_FILE_NAME)) {
+        //        importer = null;
+        //        using (Stream stream = File.OpenRead(MODEL_SCHEMA_FILE_NAME)) {
+        //            importer = new XmlImporter(stream);
+        //            importer.Import();
+        //        }
+        //    }
+        //}
+
         /*
          * Stores the whole schema to a file at the given directory with the given suffix.
          */
-        public void SaveToFile(string path, string suffix) {
+        public static void SaveToFile(string path, string suffix) {
             string filename = Path.Combine(path, GetUserFilename(suffix));
             string backupName = filename + ".bak";
             if (File.Exists(filename)) {
@@ -130,7 +147,8 @@ namespace PackFileEditorStandalone
                 File.Delete(backupName);
             }
         }
-        public void SaveToFile(string filename) {
+
+        public static void SaveToFile(string filename) {
 #if DEBUG
             Console.WriteLine("saving schema file {0}", filename);
 #endif
@@ -141,24 +159,22 @@ namespace PackFileEditorStandalone
         #endregion
   
         #region Setting Changed Definitions
-        public void SetByName(string key, List<FieldInfo> setTo) {
+        public static void SetByName(string key, List<FieldInfo> setTo) {
             typeInfos.Add(new TypeInfo(setTo) {
                 Name = key
             });
         }
         #endregion
-
-        #region Utilities
-        public string GetUserFilename(string suffix) {
+        
+        public static string GetUserFilename(string suffix) {
             return string.Format(string.Format("schema_{0}.xml", suffix));
         }
-        #endregion
-
-        #region Supported Type/Version Queries
+        
         /*
+         * Supported Type/Version Queries
          * Retrieve all supported Type Names.
          */
-        public List<string> DBFileTypes {
+        public static List<string> DBFileTypes {
             get {
                 SortedSet<string> result = new SortedSet<string>();
                 typeInfos.ForEach(t => { if (!result.Contains(t.Name)) { 
@@ -171,34 +187,22 @@ namespace PackFileEditorStandalone
         /*
          * Retrieve the highest version for the given type.
          */
-        public int MaxVersion(string type) {
+        public static int MaxVersion(string type) {
             int result = 0;
             typeInfos.ForEach(t => { if (t.Name == type) { result = Math.Max(t.Version, result); } });
             return result;
         }
+
         /*
          * Query if the given type is supported at all.
          */
-        public bool IsSupported(string type) {
+        public static bool IsSupported(string type) {
             foreach(TypeInfo info in typeInfos) {
                 if (info.Name.Equals(type)) {
                     return true;
                 }
             }
             return false;
-        }
-        #endregion
-        
-        /*
-         * Note:
-         * The names of the TypeInfos iterated here cannot be changed using the
-         * enumeration; the FieldInfo lists and contained FieldInfos can.
-         */
-        public IEnumerator<TypeInfo> GetEnumerator() {
-            return typeInfos.GetEnumerator();
-        }
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-            return GetEnumerator();
         }
     }
     

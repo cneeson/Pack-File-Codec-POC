@@ -67,9 +67,9 @@ namespace PackFileEditorStandalone
             BinaryReader reader = new BinaryReader(stream);
             reader.BaseStream.Position = 0;
             DBFileHeader header = readHeader(reader);
-            List<TypeInfo> infos = DBTypeMap.Instance.GetVersionedInfos(typeName, header.Version);
+            List<TypeInfo> infos = DBTypeMap.GetVersionedInfos(typeName, header.Version);
             if (infos.Count == 0) {
-                infos.AddRange(DBTypeMap.Instance.GetAllInfos(typeName));
+                infos.AddRange(DBTypeMap.GetAllInfos(typeName));
             }
             foreach (TypeInfo realInfo in infos) {
                 try {
@@ -124,12 +124,12 @@ namespace PackFileEditorStandalone
         public static bool CanDecode(PackedFile packedFile, out string display) {
             bool result = true;
             string key = DBFile.Typename(packedFile.FullPath);
-            if (DBTypeMap.Instance.IsSupported(key)) {
+            if (DBTypeMap.IsSupported(key)) {
                 try {
                     DBFileHeader header = PackedFileDbCodec.readHeader(packedFile);
-                    int maxVersion = DBTypeMap.Instance.MaxVersion(key);
+                    int maxVersion = DBTypeMap.MaxVersion(key);
                     if (maxVersion != 0 && header.Version > maxVersion) {
-                        display = string.Format("{0}: needs {1}, has {2}", key, header.Version, DBTypeMap.Instance.MaxVersion(key));
+                        display = string.Format("{0}: needs {1}, has {2}", key, header.Version, DBTypeMap.MaxVersion(key));
                         result = false;
                     } else {
                         display = string.Format("Version: {0}", header.Version);

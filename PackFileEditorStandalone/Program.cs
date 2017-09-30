@@ -10,18 +10,21 @@ namespace PackFileEditorStandalone
 {
     class Program
     {
-        private const String INPUT_FILE_PATH = @"c:\users\craig\documents\visual studio 2017\Projects\PackFileEditorStandalone\PackFileEditorStandalone\Resources\unit_template.pack";
-
+        private static readonly string CURRENT_DIR = Directory.GetCurrentDirectory();
+        private static readonly string PACK_FILE = Directory.GetCurrentDirectory() + @"\Resources\unit_template.pack";
+        
         private static PackFile currentPackFile;        // Full pack file full of tables 
 
         static void Main(string[] args)
         {
             Console.Out.WriteLine("--- BASIC AS FUCK PACK FILE EDITOR ---");
-            Console.Out.WriteLine("Loading file from path: " + INPUT_FILE_PATH);
+            Console.Out.WriteLine("Loading file from path: " + CURRENT_DIR);
 
             // Load pack file from system into memory
             var codec = new PackFileCodec();
-            currentPackFile = codec.Open(INPUT_FILE_PATH);
+            currentPackFile = codec.Open(PACK_FILE);
+
+            DBTypeMap.InitializeAllTypeInfos(CURRENT_DIR);
 
 
 
@@ -49,8 +52,7 @@ namespace PackFileEditorStandalone
         private static DataTable GetDataTable(String tableKey)
         {
             PackedFile currentPackedFile = currentPackFile.Files[0];
-
-
+            
             // NEXT STEP, WORK OUT WAY TO GET SCHEMA.XMLs IN BECAUSE THAT IS WHY THERE IS CURRENTLY
             // NO DBFile BEING PRODUCED
             DBFile test = PackedFileDbCodec.Decode(currentPackedFile);

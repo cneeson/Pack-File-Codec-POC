@@ -5,7 +5,7 @@ using System.IO;
 
 namespace PackFileEditorStandalone
 {
- 
+  
     /*
      * Any entry in the Pack file.
      * Has a name and a path designating its full position.
