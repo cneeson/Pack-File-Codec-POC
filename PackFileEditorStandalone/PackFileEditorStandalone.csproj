@@ -50,8 +50,7 @@
     <Compile Include="DBTypeMap.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldInstance.cs" />
-    <Compile Include="Files\readme.Designer.cs" />
-    <Compile Include="Files\readme1.Designer.cs">
+    <Compile Include="Files\readme.Designer.cs" >
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>readme.xsd</DependentUpon>
