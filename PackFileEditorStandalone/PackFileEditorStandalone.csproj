@@ -50,6 +50,11 @@
     <Compile Include="DBTypeMap.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldInstance.cs" />
+    <Compile Include="Files\readme.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>readme.xsd</DependentUpon>
+    </Compile>
     <Compile Include="IOFunctions.cs" />
     <Compile Include="PackedFile.cs" />
     <Compile Include="PackFile.cs" />
@@ -62,10 +67,43 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Resources\unit_template.pack" />
+    <None Include="Files\DB.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Files\PackFileManager.exe.config" />
+    <None Include="Files\readme.xsc">
+      <DependentUpon>readme.xsd</DependentUpon>
+    </None>
+    <None Include="Files\readme.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>readme1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Files\readme.xss">
+      <DependentUpon>readme.xsd</DependentUpon>
+    </None>
+    <None Include="Files\xmlversion" />
+    <None Include="Resources\unit_template.pack">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Target\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\correspondencies.xml" />
+    <Content Include="Files\FreeImage.dll" />
+    <Content Include="Files\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="Files\latestVersionInfo.txt" />
+    <Content Include="Files\manual_correspondencies.xml" />
+    <Content Include="Files\master_schema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\ObjectListView.dll" />
+    <Content Include="Files\partial_correspondencies.xml" />
+    <Content Include="Files\readme.xml" />
+    <Content Include="Files\schema.xml" />
+    <Content Include="Files\text_extensions.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

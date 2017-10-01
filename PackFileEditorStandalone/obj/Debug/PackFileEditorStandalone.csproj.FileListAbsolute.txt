@@ -1,6 +1,0 @@
-c:\users\craig\documents\visual studio 2017\Projects\PackFileEditorStandalone\PackFileEditorStandalone\bin\Debug\PackFileEditorStandalone.exe.config
-c:\users\craig\documents\visual studio 2017\Projects\PackFileEditorStandalone\PackFileEditorStandalone\bin\Debug\PackFileEditorStandalone.exe
-c:\users\craig\documents\visual studio 2017\Projects\PackFileEditorStandalone\PackFileEditorStandalone\bin\Debug\PackFileEditorStandalone.pdb
-c:\users\craig\documents\visual studio 2017\Projects\PackFileEditorStandalone\PackFileEditorStandalone\obj\Debug\PackFileEditorStandalone.exe
-c:\users\craig\documents\visual studio 2017\Projects\PackFileEditorStandalone\PackFileEditorStandalone\obj\Debug\PackFileEditorStandalone.pdb
-C:\Users\Craig\Documents\Visual Studio 2017\Projects\PackFileEditorStandalone\PackFileEditorStandalone\obj\Debug\PackFileEditorStandalone.csprojResolveAssemblyReference.cache
