@@ -10,14 +10,6 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-#custom
-*.suo
-*.user
-_ReSharper.*
-bin
-obj
-packages
-
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

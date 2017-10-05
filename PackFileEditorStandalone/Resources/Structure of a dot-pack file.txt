@@ -1,0 +1,8 @@
+Structure of a .pack file
+
+Header = 4 byte signed integer
+Packtype = 4 byte signed integer
+Version = 4 byte signed integer
+File count = 4 byte unsigned integer
+Index size = 4 byte unisnged integer
+

@@ -25,16 +25,19 @@ namespace PackFileEditorStandalone
         public PackFile Open(string packFullPath) {
 			PackFile file;
 			long sizes = 0;
-			using (var reader = new BinaryReader(new FileStream(packFullPath, FileMode.Open), Encoding.ASCII)) {
-				PFHeader header = ReadHeader (reader);
-				file = new PackFile (packFullPath, header);
-				OnHeaderLoaded (header);
+            using (var reader = new BinaryReader(new FileStream(packFullPath, FileMode.Open), Encoding.ASCII))
+            {
+                PFHeader header = ReadHeader(reader);
+                file = new PackFile(packFullPath, header);
+                OnHeaderLoaded(header);
 
-				long offset = file.Header.DataStart;
-				for (int i = 0; i < file.Header.FileCount; i++) {
-					uint size = reader.ReadUInt32 ();
-					sizes += size;
-                    if (file.Header.HasAdditionalInfo) {
+                long offset = file.Header.DataStart;
+                for (int i = 0; i < file.Header.FileCount; i++)
+                {
+                    uint size = reader.ReadUInt32();
+                    sizes += size;
+                    if (file.Header.HasAdditionalInfo)
+                    {
                         header.AdditionalInfo = reader.ReadInt64();
                     }
                     string packedFileName = IOFunctions.ReadZeroTerminatedAscii(reader);
@@ -42,12 +45,12 @@ namespace PackFileEditorStandalone
                     // under both Windows and Unix
                     packedFileName = packedFileName.Replace('\\', Path.DirectorySeparatorChar);
 
-					PackedFile packed = new PackedFile (file.Filepath, packedFileName, offset, size);
-					file.Add (packed);
-					offset += size;
-					this.OnPackedFileLoaded (packed);
-				}
-			}
+                    PackedFile packed = new PackedFile(file.Filepath, packedFileName, offset, size);
+                    file.Add(packed);
+                    offset += size;
+                    this.OnPackedFileLoaded(packed);
+                }
+            }
 			this.OnFinishedLoading (file);
 			file.IsModified = false;
 			return file;
@@ -63,7 +66,8 @@ namespace PackFileEditorStandalone
         /*
          * Reads pack header from the given reader.
          */
-		public static PFHeader ReadHeader(BinaryReader reader) {
+		public static PFHeader ReadHeader(BinaryReader reader)
+        {
 			PFHeader header;
 			string packIdentifier = new string (reader.ReadChars (4));
 			header = new PFHeader (packIdentifier);
