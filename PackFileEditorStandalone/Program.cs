@@ -10,7 +10,7 @@ namespace PackFileEditorStandalone
 {
     class Program
     {
-        private static readonly string CURRENT_DIR = Directory.GetCurrentDirectory();
+        private static readonly string FILES_CURRENT_DIR = Directory.GetCurrentDirectory() + "\\Files\\";
         private static readonly string PACK_FILE = Directory.GetCurrentDirectory() + @"\Resources\unit_template.pack";
 
         private static PackFile currentPackFile;        // Full pack file full of tables 
@@ -18,13 +18,13 @@ namespace PackFileEditorStandalone
         static void Main(string[] args)
         {
             Console.Out.WriteLine("--- BASIC AS FUCK PACK FILE EDITOR ---");
-            Console.Out.WriteLine("Loading file from path: " + CURRENT_DIR);
+            Console.Out.WriteLine("Loading file from path: " + FILES_CURRENT_DIR);
 
             // Load pack file from system into memory
             var codec = new PackFileCodec();
             currentPackFile = codec.Open(PACK_FILE);
 
-            DBTypeMap.InitializeAllTypeInfos(CURRENT_DIR);
+            DBTypeMap.InitializeAllTypeInfos(FILES_CURRENT_DIR);
 
 
 
